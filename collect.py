@@ -3,7 +3,7 @@ pd.set_option('display.max_columns', None)
 
 import fastf1
 
-class Collect:
+class CollectResults:
 
     def __init__(self, years=[2021,2022,2023], models=['R', 'S']):
         self.years = years
@@ -17,7 +17,11 @@ class Collect:
             return pd.DataFrame()
 
         session.load()
-        return session.results
+
+        df = session.results
+        df["Mode"] = mode
+
+        return df
 
     def save_data(self, df, year, gp, mode):
         df.to_parquet(f'data/{year}_{gp:02d}_{mode}.parquet')
@@ -30,7 +34,11 @@ class Collect:
         
         self.save_data(df, year, gp, mode)
         return True
-    
+
+    def process_year_mode(self, year, mode):
+        for i in range(1, 50):
+            if not self.process(year, i, mode):
+                break    
 
 collect = CollectResults([2021,2022], ['R'])
-collect.process(2021, 22, 'R')
+collect.process_year_mode(2021, 'R')
