@@ -2,6 +2,7 @@ import pandas as pd
 pd.set_option('display.max_columns', None)
 
 import fastf1
+import argparse
 
 class CollectResults:
 
@@ -35,10 +36,23 @@ class CollectResults:
         self.save_data(df, year, gp, mode)
         return True
 
-    def process_year_mode(self, year, mode):
+    def process_year_modes(self, year):
         for i in range(1, 50):
-            if not self.process(year, i, mode):
-                break    
+            for mode in self.models:
+                if not self.process(year, i, mode) and mode=='R':
+                    return    
+                
+    def process_years(self):
+        for year in self.years:
+            self.process_year_modes(year)
+            
 
-collect = CollectResults([2021,2022], ['R'])
-collect.process_year_mode(2021, 'R')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--years", "-y", nargs="+")
+    parser.add_argument("--models", "-m", nargs="+")
+
+    args = parser.parse_args()
+
+collect = CollectResults(args.years, args.models)
+collect.process_years()
