@@ -49,10 +49,11 @@ class CollectResults:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--years", "-y", nargs="+")
-    parser.add_argument("--models", "-m", nargs="+")
+    parser.add_argument("--years", "-y", nargs="+", type=int)
+    parser.add_argument("--modes", "-m", nargs="+")
 
     args = parser.parse_args()
 
-collect = CollectResults(args.years, args.models)
-collect.process_years()
+
+    collect = CollectResults(args.years, args.modes)
+    collect.process_years()
